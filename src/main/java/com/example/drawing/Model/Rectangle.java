@@ -20,8 +20,10 @@ public class Rectangle extends Shape {
         this.width = width;
     }
 
-    public Rectangle(double x, double y, double height) {
+    public Rectangle(double x, double y, double height, double width) {
         super(x, y);
         this.height = height;
+        this.width = width;
+
     }
 }

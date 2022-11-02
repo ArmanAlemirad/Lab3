@@ -1,20 +1,34 @@
 package com.example.drawing.Controller;
 
-import javafx.fxml.FXML;
+import com.example.drawing.Model.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+
+import static com.example.drawing.Model.ShapeType.*;
 
 public class DrawingController {
-    public ChoiceBox shapeList;
+    public ChoiceBox<ShapeType> shapeBoxList;
     public ColorPicker colorPicker;
-
-
     public Button undo;
     public Button save;
     public Canvas canvas;
 
+    ObservableList<ShapeType> shapeTypesList = FXCollections.observableArrayList(ShapeType.values());
 
+    public void initialize() {
+        shapeBoxList.setItems(shapeTypesList);
+
+    }
+
+
+    public void canvasClicked(MouseEvent mouseEvent) {
+        Shape shape = Shape.createShape(shapeBoxList.getValue(), mouseEvent.getX(), mouseEvent.getY());
+        System.out.println(shape);
+
+    }
 }
