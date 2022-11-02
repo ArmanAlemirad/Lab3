@@ -1,12 +1,14 @@
 package com.example.drawing.Model;
 
+import javafx.scene.paint.Color;
+
 import static com.example.drawing.Model.ShapeType.*;
 
 public class Shape {
 
     private final double x;
     private final double y;
-    //private Color color;
+    private Color color;
 
     public double getX() {
         return x;
@@ -15,11 +17,20 @@ public class Shape {
     public double getY() {
         return y;
     }
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
 
 
     public Shape(double x, double y) {
         this.x = x;
         this.y = y;
+        color = Color.BLACK;
+
 
     }
 

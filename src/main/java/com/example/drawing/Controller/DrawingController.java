@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 
 import static com.example.drawing.Model.ShapeType.*;
 
@@ -22,7 +23,8 @@ public class DrawingController {
 
     public void initialize() {
         shapeBoxList.setItems(shapeTypesList);
-
+        shapeBoxList.setValue(LINE);
+        colorPicker.setValue(Color.BLACK);
     }
 
 
