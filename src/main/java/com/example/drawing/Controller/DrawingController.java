@@ -1,27 +1,17 @@
 package com.example.drawing.Controller;
 
 import com.example.drawing.Model.*;
-import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import java.util.*;
 
@@ -39,42 +29,61 @@ public class DrawingController {
     public ChoiceBox<ShapeType> choiceBox;
 
     ObservableList<ShapeType> shapeTypes = FXCollections.observableArrayList(ShapeType.values());
-    Stack<Shape> undoStack = new Stack<>();
+    Stack<Shape> shapeStack = new Stack<>();
+     Stack<ArrayList<Shape>> primary = new Stack<ArrayList<Shape>>();
+     Stack<ArrayList<Shape>> secondary = new Stack<ArrayList<Shape>>();
+    ArrayList<Shape> shapeList = new ArrayList<Shape>();
     GraphicsContext context;
+
     public void undoBtn(MouseEvent mouseEvent) {
-        if (!undoStack.isEmpty()){
-            undoStack.pop();
-            for (Shape s: undoStack) {
-                s.draw(canvas);
-            }
+        if (!shapeStack.isEmpty()){
+        shapeStack.pop();
+        context.clearRect(0,0, canvas.getWidth(), canvas.getHeight() );
+        for (Shape s: shapeStack) {
+            s.draw(canvas);
         }
     }
+    }
+
+
 
     public void initialize() {
-       context = canvas.getGraphicsContext2D();
+        context = canvas.getGraphicsContext2D();
         choiceBox.setItems(shapeTypes);
-        choiceBox.setValue(BRUSH);
+        choiceBox.setValue(LINE);
         colorPicker.setValue(Color.BLACK);
         shapeSize.setText("12");
     }
 
+    public void drawOnCanvas(MouseEvent mouseEvent) {
 
-        public void canvasClicked (MouseEvent mouseEvent){
-            Shape shape = Shape.createShape(choiceBox.getValue(), mouseEvent.getX(), mouseEvent.getY());
-            undoStack.push(shape);
-        }
+      /*  GraphicsContext context = canvas.getGraphicsContext2D();
+        canvas.setOnMouseDragged(e -> {
 
-        public void drawOnCanvas (MouseEvent mouseEvent){
-            GraphicsContext context = canvas.getGraphicsContext2D();
-            canvas.setOnMouseDragged(e -> {
-                double size = Double.parseDouble(shapeSize.getText());
-                context.setFill(colorPicker.getValue());
-                context.fillRect(e.getX(),e.getY(),size,size);
-            });
-        }
+            double size = Double.parseDouble(shapeSize.getText());
+            context.setFill(colorPicker.getValue());
+            context.fillRect(e.getX(),);
+        });*/
+
+    }
 
 
-        //Shape size  double size = Double.parseDouble(shapeSize.getText());
+    public void drawFirstCordination(MouseEvent mouseEvent) {
+
+
+        shapeStack.add(new Line(mouseEvent.getX(), mouseEvent.getY(), 0,0, Double.parseDouble(shapeSize.getText()),colorPicker.getValue()));
+    }
+
+    public void drawLastCordination(MouseEvent mouseEvent) {
+        Shape s = shapeStack.peek();
+        s.setEndX(mouseEvent.getX());
+        s.setEndY(mouseEvent.getY());
+        s.draw(canvas);
+
+    }
+
+
+    //Shape size  double size = Double.parseDouble(shapeSize.getText());
 
 }
 

@@ -1,4 +1,4 @@
-package com.example.drawing.Model;
+/*package com.example.drawing.Model;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,6 +8,11 @@ import javafx.scene.control.TextField;
 public class Circle extends Shape{
     double radius;
 
+    public Circle(double startX, double startY, double endX, double endY, double radius) {
+        super(startX, startY, endX, endY);
+        this.radius = radius;
+    }
+
     public double getRadius() {
         return radius;
     }
@@ -16,15 +21,11 @@ public class Circle extends Shape{
         this.radius = radius;
     }
 
-    public Circle(double x, double y, double radius) {
-        super(x, y);
-        this.radius = radius;
-    }
 
-    public void draw (Canvas canvas) {
+
+    public void draw (Canvas canvas,double size) {
         GraphicsContext context = canvas.getGraphicsContext2D();
-        context.setFill(getColor());
-        context.fillRect(getX(),getY(),20,20);
+        context.fillRect(getStartY(),getStartY(),getEndX(),getEndY());
 
     }
-}
+}*/
