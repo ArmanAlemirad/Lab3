@@ -69,16 +69,18 @@ public class DrawingController {
 
 
     public void drawFirstCordination(MouseEvent mouseEvent) {
-
-
-        shapeStack.add(new Line(mouseEvent.getX(), mouseEvent.getY(), 0,0, Double.parseDouble(shapeSize.getText()),colorPicker.getValue()));
-    }
+        //shapeStack.add(new Line(mouseEvent.getX(), mouseEvent.getY(), 0,0, Double.parseDouble(shapeSize.getText()),colorPicker.getValue()));
+        shapeStack.add(new Rectangle(mouseEvent.getX(), mouseEvent.getY(), mouseEvent.getX(), mouseEvent.getY(),Double.parseDouble(shapeSize.getText()),colorPicker.getValue(),0,0));
+   }
 
     public void drawLastCordination(MouseEvent mouseEvent) {
+
         Shape s = shapeStack.peek();
         s.setEndX(mouseEvent.getX());
         s.setEndY(mouseEvent.getY());
+        s.setFillColor(colorPicker.getValue());
         s.draw(canvas);
+
 
     }
 

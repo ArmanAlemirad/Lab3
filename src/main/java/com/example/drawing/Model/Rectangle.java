@@ -1,52 +1,33 @@
-/*
+
 package com.example.drawing.Model;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 
 public class Rectangle extends Shape {
-    double height;
-    double width;
 
-    public Rectangle(double startX, double startY, double endX, double endY, double height, double width) {
-        super(startX, startY, endX, endY);
-        this.height = height;
+    private double width;
+    private double height;
+
+    public Rectangle(double startX, double startY, double endX, double endY, double size, Color fillColor, double width, double height) {
+        super(startX, startY, endX, endY, size, fillColor);
         this.width = width;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public void setHeight(double height) {
         this.height = height;
     }
 
-    public double getWidth() {
-        return width;
-    }
-
-    public void setWidth(double width) {
-        this.width = width;
-    }
-
-
-    public void draw (Canvas canvas) {
-        GraphicsContext context = canvas.getGraphicsContext2D();
-        context.fillRect(getStartY(),getStartY(),getEndX(),getEndY());
+    @Override
+    public void setFillColor(Color color) {
 
     }
 
-   */
-/* public void draw (Canvas canvas) {
+    public void draw(Canvas canvas){
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setStroke(super.getColor());
-        gc.strokeRect(super.getTopLeft().getX(), super.getTopLeft().getY(), width, height);
+        gc.strokeRect(getStartY(),getStartY(), width, height);
         gc.setFill(super.getFillColor());
-        gc.fillRect(super.getTopLeft().getX(), super.getTopLeft().getY(), width, height);
+        gc.fillRect(getStartX(), getStartY(), width, height);
+    }
 
-    }*//*
-
-}*/
+}
