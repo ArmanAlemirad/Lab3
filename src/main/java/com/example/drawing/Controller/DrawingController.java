@@ -42,15 +42,31 @@ public class DrawingController {
 
     ObservableList<ShapeType> shapeTypes = FXCollections.observableArrayList(ShapeType.values());
 
-    public void initialize(){
+
+    public void initialize() {
+        GraphicsContext context = canvas.getGraphicsContext2D();
+
         choiceBox.setItems(shapeTypes);
         choiceBox.setValue(BRUSH);
         colorPicker.setValue(Color.BLACK);
-}
-    public void canvasClicked(MouseEvent mouseEvent) {
-        Shape shape = Shape.createShape(choiceBox.getValue(), mouseEvent.getX(), mouseEvent.getY());
-        System.out.println(shape);
+        shapeSize.setText("12");
     }
+
+        public void canvasClicked (MouseEvent mouseEvent){
+            Shape shape = Shape.createShape(choiceBox.getValue(), mouseEvent.getX(), mouseEvent.getY());
+
+        }
+
+        public void drawOnCanvas (MouseEvent mouseEvent){
+            GraphicsContext context = canvas.getGraphicsContext2D();
+
+            canvas.setOnMouseDragged(e -> {
+                double size = Double.parseDouble(shapeSize.getText());
+                context.setFill(colorPicker.getValue());
+                context.fillRect(e.getX(),e.getY(),size,size);
+            });
+        }
+
 }
 
 
