@@ -38,92 +38,21 @@ public class DrawingController {
     public BorderPane borderPane;
     public Button zoomIn;
     public Button zoomOut;
-    public Button brushBtn;
-    public Button rectBtn;
-    public Button CircleBtn;
+    public ChoiceBox<ShapeType> choiceBox;
 
+    ObservableList<ShapeType> shapeTypes = FXCollections.observableArrayList(ShapeType.values());
 
-    ObservableList<ShapeType> shapeTypesList = FXCollections.observableArrayList(ShapeType.values());
-    Rectangle  rectangle;
-    Stack<Image> undoList = new Stack<>();
-    GraphicsContext context;
-
-    public void initialize() {
+    public void initialize(){
+        choiceBox.setItems(shapeTypes);
+        choiceBox.setValue(BRUSH);
         colorPicker.setValue(Color.BLACK);
-        shapeSize.setText("12");
-        //context = canvas.getGraphicsContext2D();
-    }
-
-
-    public void canvasClicked(MouseEvent mouseEvent) {
-
-
-
-
-
-    }
-
-    public void draw(MouseEvent mouseEvent) {
-        canvas.setOnMouseDragged(e -> {
-            double size = Double.parseDouble(shapeSize.getText());
-            double x = e.getX() - size / 2;
-            double y = e.getY() - size / 2;
-            context.setFill(colorPicker.getValue());
-            context.fillRect(x, y, size, size);
-        });
-        FileChooser lineFile = new FileChooser();
-
-    }
-
-    public void undoButton(MouseEvent mouseEvent) {
-
-    }
-    public void drawRect ( ){
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setStroke(colorPicker.getValue());
-        gc.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getHeight(), rectangle.getWidth());
-        gc.setFill(colorPicker.getValue());
-        gc.fillRect(rectangle.getX(), rectangle.getY(), rectangle.getHeight(), rectangle.getWidth());
-    }
-
-    public void rectDraw(MouseEvent mouseEvent) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setStroke(colorPicker.getValue());
-        gc.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getHeight(), rectangle.getWidth());
-        gc.setFill(colorPicker.getValue());
-        gc.fillRect(rectangle.getX(), rectangle.getY(), rectangle.getHeight(), rectangle.getWidth());
-    }
-
-    public void drawBrush(MouseEvent mouseEvent) {
-    }
-
-    public void drawStartRect(MouseEvent mouseEvent) {
-    }
-
-    public void drawShapeRect(MouseEvent mouseEvent) {
-    }
-
-    public void drawEndRect(MouseEvent mouseEvent) {
-    }
-
-    public void drawStartCircle(MouseEvent mouseEvent) {
-    }
-
-    public void drawShapeCircle(MouseEvent mouseEvent) {
-    }
-
-    public void drawEndCile(MouseEvent mouseEvent) {
-    }
-
-/*    //Rectangle draw
-    GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setStroke(super.getColor());
-        gc.strokeRect(super.getTopLeft().getX(), super.getTopLeft().getY(), width, height);
-        gc.setFill(super.getFillColor());
-        gc.fillRect(super.getTopLeft().getX(), super.getTopLeft().getY(), width, height);
-}*/
-
 }
+    public void canvasClicked(MouseEvent mouseEvent) {
+        Shape shape = Shape.createShape(choiceBox.getValue(), mouseEvent.getX(), mouseEvent.getY());
+        System.out.println(shape);
+    }
+}
+
 
 
 
