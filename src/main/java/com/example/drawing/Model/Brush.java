@@ -10,16 +10,10 @@ public class Brush extends Shape {
         super(x, y);
     }
 
-    public void drawLine(Canvas canvas, ColorPicker colorPicker, TextField shapeSize) {
+    public void draw (Canvas canvas) {
         GraphicsContext context = canvas.getGraphicsContext2D();
-        canvas.setOnMouseDragged(e -> {
-            double size = Double.parseDouble(shapeSize.getText());
-            double x = e.getX() - size / 2;
-            double y = e.getY() - size / 2;
-            context.setFill(colorPicker.getValue());
-            context.fillRect(x, y, size, size);
-        });
-
+        context.setFill(getColor());
+        context.fillRect(getX(),getY(),20,20);
 
     }
 }

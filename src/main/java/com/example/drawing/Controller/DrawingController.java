@@ -23,9 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 import static com.example.drawing.Model.ShapeType.*;
 
@@ -41,31 +39,42 @@ public class DrawingController {
     public ChoiceBox<ShapeType> choiceBox;
 
     ObservableList<ShapeType> shapeTypes = FXCollections.observableArrayList(ShapeType.values());
-
+    Stack<Shape> undoStack = new Stack<>();
+    GraphicsContext context;
+    public void undoBtn(MouseEvent mouseEvent) {
+        if (!undoStack.isEmpty()){
+            undoStack.pop();
+            for (Shape s: undoStack) {
+                s.draw(canvas);
+            }
+        }
+    }
 
     public void initialize() {
-        GraphicsContext context = canvas.getGraphicsContext2D();
-
+       context = canvas.getGraphicsContext2D();
         choiceBox.setItems(shapeTypes);
         choiceBox.setValue(BRUSH);
         colorPicker.setValue(Color.BLACK);
         shapeSize.setText("12");
     }
 
+
         public void canvasClicked (MouseEvent mouseEvent){
             Shape shape = Shape.createShape(choiceBox.getValue(), mouseEvent.getX(), mouseEvent.getY());
-
+            undoStack.push(shape);
         }
 
         public void drawOnCanvas (MouseEvent mouseEvent){
             GraphicsContext context = canvas.getGraphicsContext2D();
-
             canvas.setOnMouseDragged(e -> {
                 double size = Double.parseDouble(shapeSize.getText());
                 context.setFill(colorPicker.getValue());
                 context.fillRect(e.getX(),e.getY(),size,size);
             });
         }
+
+
+        //Shape size  double size = Double.parseDouble(shapeSize.getText());
 
 }
 

@@ -1,9 +1,12 @@
 package com.example.drawing.Model;
 
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 
-public class Shape {
+public abstract class Shape {
 
     private final double x;
     private final double y;
@@ -41,4 +44,6 @@ public class Shape {
         };
 
     }
+
+    public abstract void draw (Canvas canvas);
 }

@@ -1,5 +1,10 @@
 package com.example.drawing.Model;
 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.TextField;
+
 public class Rectangle extends Shape {
     double height;
     double width;
@@ -26,4 +31,19 @@ public class Rectangle extends Shape {
         this.width = width;
 
     }
+    public void draw (Canvas canvas) {
+        GraphicsContext context = canvas.getGraphicsContext2D();
+        context.setFill(getColor());
+        context.fillRect(getX(),getY(),20,20);
+
+    }
+
+   /* public void draw (Canvas canvas) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setStroke(super.getColor());
+        gc.strokeRect(super.getTopLeft().getX(), super.getTopLeft().getY(), width, height);
+        gc.setFill(super.getFillColor());
+        gc.fillRect(super.getTopLeft().getX(), super.getTopLeft().getY(), width, height);
+
+    }*/
 }
