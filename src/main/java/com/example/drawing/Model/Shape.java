@@ -2,8 +2,6 @@ package com.example.drawing.Model;
 
 import javafx.scene.paint.Color;
 
-import static com.example.drawing.Model.ShapeType.*;
-
 public class Shape {
 
     private final double x;
@@ -38,7 +36,7 @@ public class Shape {
         return switch (type) {
             case CIRCLE -> new Circle(x, y, 0);
             case RECTANGLE -> new Rectangle(x, y, 0, 0);
-            case LINE -> new Line(x, y);
+            case BRUSH -> new Brush(x, y);
         };
 
 

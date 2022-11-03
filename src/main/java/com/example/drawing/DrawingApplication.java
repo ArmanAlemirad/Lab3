@@ -1,5 +1,6 @@
 package com.example.drawing;
 
+import com.example.drawing.Controller.DrawingController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
