@@ -23,11 +23,11 @@ public class Rectangle extends Shape {
 
     }
 
-    public void draw(Canvas canvas){
+    public void draw(Canvas canvas) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.strokeRect(getStartY(),getStartY(), width, height);
+        gc.setStroke(super.getFillColor());
+        gc.strokeRect(super.getStartX(), super.getStartY(), width, height);
         gc.setFill(super.getFillColor());
-        gc.fillRect(getStartX(), getStartY(), width, height);
+        gc.fillRect(super.getStartX(), super.getStartY(), width, height);
     }
-
 }

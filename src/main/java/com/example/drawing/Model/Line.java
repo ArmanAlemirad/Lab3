@@ -19,7 +19,7 @@ public class Line extends Shape {
         GraphicsContext context = canvas.getGraphicsContext2D();
         context.setFill(super.getFillColor());
         context.setLineWidth(super.getSize());
-        context.strokeLine(getStartY(),getStartY(),getEndX(),getEndY());
+        context.strokeLine(getStartX(),getStartY(),getEndX(),getEndY());
 
 
     }
