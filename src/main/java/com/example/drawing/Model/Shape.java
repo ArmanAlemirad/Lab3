@@ -1,6 +1,7 @@
 package com.example.drawing.Model;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 
 public abstract class Shape {
 
@@ -8,17 +9,18 @@ public abstract class Shape {
     private  double startY;
     private double endX;
     private double endY;
-
     private double size;
 
-    private String color;
+    private Color fillColor;
+    private Color strokeColor;
 
-    public Shape(double startX, double startY, double endX, double endY, double size) {
+    public Shape(double startX, double startY, double endX, double endY, double size, Color fillColor) {
         this.startX = startX;
         this.startY = startY;
         this.endX = endX;
         this.endY = endY;
         this.size = size;
+        this.fillColor =fillColor;
     }
 
 
@@ -63,5 +65,22 @@ public abstract class Shape {
         this.size = size;
     }
 
-    public abstract void draw (Canvas canvas);
+    public Color getFillColor() {
+        return fillColor;
+    }
+
+    public void setFillColor(Color fillColor) {
+        this.fillColor = fillColor;
+    }
+
+    public Color getStrokeColor() {
+        return strokeColor;
+    }
+
+    public void setStrokeColor(Color strokeColor) {
+        this.strokeColor = strokeColor;
+    }
+
+    public abstract void draw(Canvas canvas);
+
 }
