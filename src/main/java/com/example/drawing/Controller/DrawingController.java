@@ -1,19 +1,21 @@
 package com.example.drawing.Controller;
 
-import com.example.drawing.Model.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 import java.util.*;
 
-public class DrawingController {
+public class DrawingController<RenderedImage> {
+
     public ColorPicker colorPicker;
     public Button undo;
     public Button save;
@@ -27,107 +29,164 @@ public class DrawingController {
     public Button rectButton;
 
     public boolean isLineClicked = false;
+    public boolean isZoomInClicked = false;
+    public boolean isZoomOutClicked = false;
+
 
     public boolean isRectClicked = false;
+    public ColorPicker secondColorPicker;
+
+    Line line = new Line();
+    Rectangle rectangle = new Rectangle();
+    Stack<Rectangle> undoShapeRectangle = new Stack<Rectangle>();
+    Stack<Line> undoShapeLine = new Stack<Line>();
 
 
-    ObservableList<ShapeType> shapeTypes = FXCollections.observableArrayList(ShapeType.values());
-    Stack<Shape> shapeStack = new Stack<>();
-
-    public String line = "Line";
-
+    String color;
 
     GraphicsContext context;
 
     public void undoBtn(MouseEvent mouseEvent) {
-        if (!shapeStack.isEmpty()) {
-            shapeStack.pop();
+
+        if (!undoShapeLine.isEmpty()) {
+            undoShapeLine.pop();
             context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            for (Shape s : shapeStack) {
-                s.draw(canvas);
+            for (int i = 0; i < undoShapeLine.size(); i++) {
+                Shape shape = undoShapeLine.elementAt(i);
+                if (shape.getClass() == Line.class) {
+                    Line temp = (Line) shape;
+                    context.setLineWidth(temp.getStrokeWidth());
+                    context.setStroke(temp.getStroke());
+                    context.setFill(temp.getFill());
+                    context.strokeLine(temp.getStartX(), temp.getStartY(), temp.getEndX(), temp.getEndY());
+                }
             }
         }
     }
 
-    public void initialize() {
-        context = canvas.getGraphicsContext2D();
-        colorPicker.setValue(Color.BLACK);
-        shapeSize.setText("12");
-    }
+
+        public void initialize () {
+            context = canvas.getGraphicsContext2D();
+            colorPicker.setValue(Color.BLACK);
+            secondColorPicker.setValue(Color.TRANSPARENT);
 
 
-    public void deleteAll(ActionEvent actionEvent) {
-        if (checkBox.isSelected()) {
-            context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            shapeSize.setText("12");
         }
-    }
 
-    public void drawFirstCordination(MouseEvent mouseEvent) {
 
-        if(isLineClicked){
-            shapeStack.add(new Line(mouseEvent.getX(), mouseEvent.getY(), 0, 0, Double.parseDouble(shapeSize.getText()), colorPicker.getValue()));
-
-        } else if (isRectClicked){
-            shapeStack.add(new Rectangle(mouseEvent.getX(), mouseEvent.getY(), mouseEvent.getX(), mouseEvent.getY(), Double.parseDouble(shapeSize.getText()), colorPicker.getValue(), 0, 0));
-
-            GraphicsContext gc = canvas.getGraphicsContext2D();
-            gc.setStroke(colorPicker.getValue());
-            gc.strokeRect(mouseEvent.getX(), mouseEvent.getY(), mouseEvent.getX(), mouseEvent.getY());
-            gc.setFill(colorPicker.getValue());
-            gc.fillRect(mouseEvent.getX(), mouseEvent.getY(), mouseEvent.getX(), mouseEvent.getY());
+        public void deleteAll (ActionEvent actionEvent){
+            if (checkBox.isSelected()) {
+                context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            }
         }
-            //shapeStack.add(new Rectangle(mouseEvent.getX(), mouseEvent.getY(), mouseEvent.getX(), mouseEvent.getY(), Double.parseDouble(shapeSize.getText()), colorPicker.getValue(), 0, 0));
 
-    }
 
-    public void drawLastCordination(MouseEvent mouseEvent) {
-
-        if (isLineClicked) {
-            Shape s = shapeStack.peek();
-            s.setEndX(mouseEvent.getX());
-            s.setEndY(mouseEvent.getY());
-            s.setFillColor(colorPicker.getValue());
-            s.draw(canvas);
-        } else if (isRectClicked){
-            Shape s = shapeStack.peek();
-            s.setEndX(mouseEvent.getX());
-            s.setEndY(mouseEvent.getY());
-            s.setFillColor(colorPicker.getValue());
-            s.draw(canvas);
+        public void zoomOut (MouseEvent mouseEvent){
         }
+
+        public void zoomIn (MouseEvent mouseEvent){
+            if (isZoomInClicked) {
+                canvas.setOnMousePressed(e -> {
+                    canvas.getOnZoom();
+                    canvas.setScaleX(2);
+                });
+            }
+        }
+
+        public void lineAction (ActionEvent actionEvent){
+            if (isLineClicked) {
+
+                double size = Double.parseDouble(shapeSize.getText());
+                canvas.setOnMousePressed(e -> {
+
+                    System.out.println("canvas is pressed for Line");
+                    context.setStroke(colorPicker.getValue());
+                    context.setLineWidth(size);
+                    line.setStartX(e.getX());
+                    line.setStartY(e.getY());
+
+                });
+
+                canvas.setOnMouseDragged(e -> {
+                    System.out.println("Line is dragged");
+                });
+
+                canvas.setOnMouseReleased(e -> {
+                    System.out.println("Line is release");
+                    line.setEndX(e.getX());
+                    line.setEndY(e.getY());
+                    context.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+                    undoShapeLine.push(new Line(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY()));
+                });
+
+            }
+
+        }
+
+        public void rectangleAction (ActionEvent actionEvent){
+            if (isRectClicked) {
+                canvas.setOnMousePressed(e -> {
+                    double size = Double.parseDouble(shapeSize.getText());
+                    context.setStroke(colorPicker.getValue());
+                    context.setFill(secondColorPicker.getValue());
+                    context.setLineWidth(size);
+                    rectangle.setX(e.getX());
+                    rectangle.setY(e.getY());
+                });
+                canvas.setOnMouseDragged(e -> {
+                });
+                canvas.setOnMouseReleased(e -> {
+                    rectangle.setWidth(Math.abs((e.getX() - rectangle.getX())));
+                    rectangle.setHeight(Math.abs((e.getY() - rectangle.getY())));
+                    if (rectangle.getX() > e.getX()) {
+                        rectangle.setX(e.getX());
+                    }
+                    if (rectangle.getY() > e.getY()) {
+                        rectangle.setY(e.getY());
+                    }
+                    context.fillRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+                    context.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+
+                    undoShapeRectangle.push(new Rectangle(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight()));
+
+
+                });
+            }
+
+        }
+
+        public void saveAction (ActionEvent actionEvent){
+
+        }
+
+
+        public void lineClicked (MouseEvent mouseEvent){
+            isLineClicked = true;
+            isRectClicked = false;
+        }
+
+        public void rectClicked (MouseEvent mouseEvent){
+            isLineClicked = false;
+            isRectClicked = true;
+        }
+
+        public void zoomInAction (ActionEvent actionEvent){
+            isZoomInClicked = true;
+            isZoomOutClicked = false;
+        }
+
+        public void zoomOutAction (ActionEvent actionEvent){
+            isZoomInClicked = false;
+            isZoomOutClicked = true;
+        }
+
+        public void saveClick (MouseEvent mouseEvent){
+        }
+
+
+        //Variabel med current shapetype typ. if sats.., tex enum. för att sen köra onAction på knappen.
     }
-
-    public void zoomOut(MouseEvent mouseEvent) {
-    }
-
-    public void zoomIn(MouseEvent mouseEvent) {
-    }
-
-    public void lineAction(ActionEvent actionEvent) {
-    }
-
-    public void rectangleAction(ActionEvent actionEvent) {
-    }
-
-    public void saveAction(ActionEvent actionEvent) {
-    }
-
-    public void canvasClicked(MouseEvent mouseEvent) {
-    }
-
-    public void lineClicked(MouseEvent mouseEvent) {
-        isLineClicked = true;
-        isRectClicked = false;
-    }
-
-    public void rectClicked(MouseEvent mouseEvent) {
-        isLineClicked = false;
-        isRectClicked = true;
-    }
-
-
-    //Variabel med current shapetype typ. if sats.., tex enum. för att sen köra onAction på knappen.
-}
 
 
 
