@@ -11,16 +11,15 @@ public abstract class Shape {
     private double endY;
     private double size;
 
-    private Color fillColor;
     private Color strokeColor;
 
-    public Shape(double startX, double startY, double endX, double endY, double size, Color fillColor) {
+    public Shape(double startX, double startY, double endX, double endY, double size, Color strokeColor) {
         this.startX = startX;
         this.startY = startY;
         this.endX = endX;
         this.endY = endY;
         this.size = size;
-        this.fillColor =fillColor;
+        this.strokeColor = strokeColor;
     }
 
 
@@ -63,14 +62,6 @@ public abstract class Shape {
 
     public void setSize(double size) {
         this.size = size;
-    }
-
-    public Color getFillColor() {
-        return fillColor;
-    }
-
-    public void setFillColor(Color fillColor) {
-        this.fillColor = fillColor;
     }
 
     public Color getStrokeColor() {

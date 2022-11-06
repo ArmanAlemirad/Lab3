@@ -56,7 +56,7 @@ public class DrawingController<RenderedImage> {
     public void initialize() {
         context = canvas.getGraphicsContext2D();
         colorPicker.setValue(Color.BLACK);
-        secondColorPicker.setValue(Color.TRANSPARENT);
+        secondColorPicker.setValue(Color.WHITE);
 
 
         shapeSize.setText("12");
@@ -86,7 +86,7 @@ public class DrawingController<RenderedImage> {
         if (isLineClicked) {
             double size = Double.parseDouble(shapeSize.getText());
             canvas.setOnMousePressed(e -> {
-                Line line = new Line(0, 0, 0, 0, size, colorPicker.getValue(), 0);
+                Line line = new Line(0, 0, 0, 0, size, colorPicker.getValue());
 
                 System.out.println("canvas is pressed for Line");
                 context.setStroke(colorPicker.getValue());
@@ -96,10 +96,6 @@ public class DrawingController<RenderedImage> {
                 shapeStack.push(line);
             });
             canvas.setOnMouseDragged(e -> {
-                Line line = (Line) shapeStack.peek();
-                line.getShapeCordinateX().add(e.getX());
-                line.getShapeCordinateY().add(e.getY());
-
 
                 System.out.println("Line is dragged");
             });
@@ -119,10 +115,10 @@ public class DrawingController<RenderedImage> {
         double size = Double.parseDouble(shapeSize.getText());
 
         if (isRectClicked) {
-            Rectangle rectangle = new Rectangle(0,0,0,0,size, colorPicker.getValue(),0,0,0);
-
             canvas.setOnMousePressed(e -> {
-                    context.setStroke(colorPicker.getValue());
+                Rectangle rectangle = new Rectangle(0,0,0,0,size, colorPicker.getValue(),0,0,secondColorPicker.getValue());
+
+                context.setStroke(colorPicker.getValue());
                     context.setFill(secondColorPicker.getValue());
                     context.setLineWidth(size);
                     rectangle.setStartX(e.getX());
@@ -131,23 +127,26 @@ public class DrawingController<RenderedImage> {
 
             });
                 canvas.setOnMouseDragged(e -> {
-                    Line line = (Line) shapeStack.peek();
-                    line.getShapeCordinateX().add(e.getX());
-                    line.getShapeCordinateY().add(e.getY());
                 });
                 canvas.setOnMouseReleased(e -> {
-                    rectangle.setWidth(Math.abs((e.getX() - rectangle.getEndX())));
-                    rectangle.setHeight(Math.abs((e.getY() - rectangle.getEndY())));
-                    if(rectangle.getStartX() > e.getX()) {
-                        rectangle.setStartX(e.getX());
-                    }
-                    //rect.setY((rect.getY() > e.getY()) ? e.getY(): rect.getY());
-                    if (rectangle.getStartY(e.getY()) > e.getX()) {
-                        rectangle.getStartY(e.getY());
-                    }
+                    Rectangle rectangle = (Rectangle) shapeStack.peek();
 
-                    context.fillRect(rectangle.getStartX(), rectangle.getStartY(e.getY()), rectangle.getWidth(), rectangle.getHeight());
-                    context.strokeRect(rectangle.getStartX(), rectangle.getStartY(e.getY()), rectangle.getWidth(), rectangle.getHeight());
+                    if(rectangle.getStartX() > e.getX()) {
+                        rectangle.setEndX(rectangle.getStartX());
+                        rectangle.setStartX(e.getX());
+                    } else {
+                        rectangle.setEndX(e.getX());
+                    }
+                    if(rectangle.getStartY() > e.getY()) {
+                        rectangle.setEndY(rectangle.getStartY());
+                        rectangle.setStartY(e.getY());
+                    } else {
+                        rectangle.setEndY(e.getY());
+                    }
+                    rectangle.setWidth(Math.abs(rectangle.getEndX() - rectangle.getStartX()));
+                    rectangle.setHeight(Math.abs(rectangle.getEndY() - rectangle.getStartY()));
+                    context.fillRect(rectangle.getStartX(), rectangle.getStartY(), rectangle.getWidth(), rectangle.getHeight());
+                    context.strokeRect(rectangle.getStartX(), rectangle.getStartY(),rectangle.getWidth(), rectangle.getHeight());
                 });
         }
 
@@ -170,16 +169,6 @@ public class DrawingController<RenderedImage> {
         isRectClicked = true;
     }
 
-    public void zoomInAction(ActionEvent actionEvent) {
-        isZoomInClicked = true;
-        isZoomOutClicked = false;
-    }
-
-    public void zoomOutAction(ActionEvent actionEvent) {
-        isZoomInClicked = false;
-        isZoomOutClicked = true;
-    }
-
     public void saveClick(MouseEvent mouseEvent) {
     }
 
@@ -192,6 +181,9 @@ public class DrawingController<RenderedImage> {
 
             }
         });*/
+    }
+
+    public void selectShapeOnAction(ActionEvent actionEvent) {
     }
 
 
