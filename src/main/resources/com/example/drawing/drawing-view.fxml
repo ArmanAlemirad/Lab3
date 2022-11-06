@@ -89,7 +89,7 @@
             </CheckBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Button fx:id="selectShapeBtn" mnemonicParsing="false" onAction="#selectShapeOnAction" text=" Select Shape">
+                  <Button fx:id="selectShapeBtn" mnemonicParsing="false" onAction="#selectShapeOnAction" onMouseClicked="#selectShapeClicked" text=" Select Shape">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </VBox.margin>

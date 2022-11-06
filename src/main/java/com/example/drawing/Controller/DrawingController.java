@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 
 import java.util.*;
 
-public class DrawingController<RenderedImage> {
+public class DrawingController {
 
     public ColorPicker colorPicker;
     public Button undo;
@@ -30,13 +30,12 @@ public class DrawingController<RenderedImage> {
 
     public boolean isLineClicked = false;
     public boolean isZoomInClicked = false;
-    public boolean isZoomOutClicked = false;
-
+    public boolean isSelectClicked = false;
 
     public boolean isRectClicked = false;
     public ColorPicker secondColorPicker;
 
-    Stack<Shape> shapeStack = new Stack<>();
+     Stack<Shape> shapeStack = new Stack<>();
 
     GraphicsContext context;
 
@@ -58,7 +57,6 @@ public class DrawingController<RenderedImage> {
         colorPicker.setValue(Color.BLACK);
         secondColorPicker.setValue(Color.WHITE);
 
-
         shapeSize.setText("12");
     }
 
@@ -66,19 +64,6 @@ public class DrawingController<RenderedImage> {
     public void deleteAll(ActionEvent actionEvent) {
         if (checkBox.isSelected()) {
             context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        }
-    }
-
-
-    public void zoomOut(MouseEvent mouseEvent) {
-    }
-
-    public void zoomIn(MouseEvent mouseEvent) {
-        if (isZoomInClicked) {
-            canvas.setOnMousePressed(e -> {
-                canvas.getOnZoom();
-                canvas.setScaleX(2);
-            });
         }
     }
 
@@ -107,7 +92,6 @@ public class DrawingController<RenderedImage> {
                 context.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
             });
 
-
         }
     }
 
@@ -131,18 +115,8 @@ public class DrawingController<RenderedImage> {
                 canvas.setOnMouseReleased(e -> {
                     Rectangle rectangle = (Rectangle) shapeStack.peek();
 
-                    if(rectangle.getStartX() > e.getX()) {
-                        rectangle.setEndX(rectangle.getStartX());
-                        rectangle.setStartX(e.getX());
-                    } else {
-                        rectangle.setEndX(e.getX());
-                    }
-                    if(rectangle.getStartY() > e.getY()) {
-                        rectangle.setEndY(rectangle.getStartY());
-                        rectangle.setStartY(e.getY());
-                    } else {
-                        rectangle.setEndY(e.getY());
-                    }
+                    setX(e.getX(), rectangle);
+                    setY(e.getY(), rectangle);
                     rectangle.setWidth(Math.abs(rectangle.getEndX() - rectangle.getStartX()));
                     rectangle.setHeight(Math.abs(rectangle.getEndY() - rectangle.getStartY()));
                     context.fillRect(rectangle.getStartX(), rectangle.getStartY(), rectangle.getWidth(), rectangle.getHeight());
@@ -154,6 +128,24 @@ public class DrawingController<RenderedImage> {
 
     }
 
+    public void setY(double eventY, Rectangle rectangle) {
+        if(rectangle.getStartY() > eventY) {
+            rectangle.setEndY(rectangle.getStartY());
+            rectangle.setStartY(eventY);
+        } else {
+            rectangle.setEndY(eventY);
+        }
+    }
+
+    public void setX(double eventX, Rectangle rectangle) {
+        if(rectangle.getStartX() > eventX) {
+            rectangle.setEndX(rectangle.getStartX());
+            rectangle.setStartX(eventX);
+        } else {
+            rectangle.setEndX(eventX);
+        }
+    }
+
     public void saveAction(ActionEvent actionEvent) {
 
     }
@@ -162,11 +154,15 @@ public class DrawingController<RenderedImage> {
     public void lineClicked(MouseEvent mouseEvent) {
         isLineClicked = true;
         isRectClicked = false;
+        isSelectClicked = false;
+
     }
 
     public void rectClicked(MouseEvent mouseEvent) {
         isLineClicked = false;
         isRectClicked = true;
+        isSelectClicked = false;
+
     }
 
     public void saveClick(MouseEvent mouseEvent) {
@@ -184,6 +180,21 @@ public class DrawingController<RenderedImage> {
     }
 
     public void selectShapeOnAction(ActionEvent actionEvent) {
+
+        if ( isSelectClicked){
+
+            Shape lastUndo = shapeStack.lastElement();
+            lastUndo.setStrokeColor(colorPicker.getValue());
+            lastUndo.setStrokeColor(colorPicker.getValue());
+        }
+
+    }
+
+    public void selectShapeClicked(MouseEvent mouseEvent) {
+        isSelectClicked = true;
+        isLineClicked = false;
+        isRectClicked = false;
+
     }
 
 
