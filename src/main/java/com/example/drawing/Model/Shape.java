@@ -1,12 +1,13 @@
 package com.example.drawing.Model;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public abstract class Shape {
 
-    private  double startX;
-    private  double startY;
+    private double startX;
+    private double startY;
     private double endX;
     private double endY;
     private double size;
@@ -21,7 +22,6 @@ public abstract class Shape {
         this.size = size;
         this.strokeColor = strokeColor;
     }
-
 
 
     public double getStartX() {
@@ -74,4 +74,11 @@ public abstract class Shape {
 
     public abstract void draw(Canvas canvas);
 
+    public static Shape createShape(ShapeType type, double startX, double startY, double endX, double endY, double size, Color strokeColor) {
+        return switch (type) {
+            case LINE -> new Line(startX, startY, endX, endY, size, strokeColor);
+            case RECTANGLE -> new Rectangle(startX, startY, endX, endY, size, strokeColor, 0, 0, strokeColor);
+        };
+
+    }
 }

@@ -3,6 +3,9 @@ package com.example.drawing.Controller;
 import com.example.drawing.Model.Line;
 import com.example.drawing.Model.Rectangle;
 import com.example.drawing.Model.Shape;
+import com.example.drawing.Model.ShapeType;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -34,8 +37,10 @@ public class DrawingController {
 
     public boolean isRectClicked = false;
     public ColorPicker secondColorPicker;
+    public ChoiceBox<ShapeType> choiceBox;
 
-     Stack<Shape> shapeStack = new Stack<>();
+    Stack<Shape> shapeStack = new Stack<>();
+    ObservableList<ShapeType> shapeTypesList = FXCollections.observableArrayList(ShapeType.values());
 
     GraphicsContext context;
 
@@ -53,6 +58,9 @@ public class DrawingController {
 
 
     public void initialize() {
+
+        choiceBox.setItems(shapeTypesList);
+       //choiceBox.valueProperty().bindBidirectional()
         context = canvas.getGraphicsContext2D();
         colorPicker.setValue(Color.BLACK);
         secondColorPicker.setValue(Color.WHITE);
@@ -194,6 +202,19 @@ public class DrawingController {
         isSelectClicked = true;
         isLineClicked = false;
         isRectClicked = false;
+
+    }
+
+    public void choiceBoxClicked(MouseEvent mouseEvent) {
+        if(choiceBox.getValue() == ShapeType.LINE){
+            System.out.println("line is clicked");
+
+
+
+        } else if (choiceBox.getValue() == ShapeType.RECTANGLE){
+            System.out.println("RECT is clicked");
+
+        }
 
     }
 
