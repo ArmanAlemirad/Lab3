@@ -1,9 +1,7 @@
 package com.example.drawing.Controller;
 
-import com.example.drawing.Model.Line;
-import com.example.drawing.Model.Rectangle;
-import com.example.drawing.Model.Shape;
-import com.example.drawing.Model.ShapeType;
+import com.example.drawing.Model.*;
+import com.example.drawing.SVG.FileWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,209 +16,145 @@ import javafx.scene.paint.Color;
 import java.util.*;
 
 public class DrawingController {
-
     public ColorPicker colorPicker;
     public Button undo;
     public Button save;
     public Canvas canvas;
     public TextField shapeSize;
     public BorderPane borderPane;
-    public Button zoomIn;
-    public Button zoomOut;
-    public CheckBox checkBox;
-    public Button lineButton;
-    public Button rectButton;
-
-    public boolean isLineClicked = false;
-    public boolean isZoomInClicked = false;
-    public boolean isSelectClicked = false;
-
-    public boolean isRectClicked = false;
-    public ColorPicker secondColorPicker;
+    public CheckBox deleteBox;
     public ChoiceBox<ShapeType> choiceBox;
+    public CheckBox changeShape;
 
-    Stack<Shape> shapeStack = new Stack<>();
+
+    Model model = new Model();
+
+    Stack<Shape> undoShapeStack = new Stack<>();
     ObservableList<ShapeType> shapeTypesList = FXCollections.observableArrayList(ShapeType.values());
-
     GraphicsContext context;
 
     public void undoBtn(MouseEvent mouseEvent) {
 
-        if (!shapeStack.isEmpty()) {
-            shapeStack.pop();
+        if (!undoShapeStack.isEmpty()) {
+            undoShapeStack.pop();
             context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            for (Shape shape : shapeStack) {
+            for (Shape shape : undoShapeStack) {
                 shape.draw(canvas);
             }
         }
-
     }
-
 
     public void initialize() {
+        colorPicker.valueProperty().bindBidirectional(model.colorProperty());
+        shapeSize.textProperty().bindBidirectional(model.sizeProperty());
+        choiceBox.valueProperty().bindBidirectional(model.shapeTypeProperty());
 
         choiceBox.setItems(shapeTypesList);
-       //choiceBox.valueProperty().bindBidirectional()
         context = canvas.getGraphicsContext2D();
         colorPicker.setValue(Color.BLACK);
-        secondColorPicker.setValue(Color.WHITE);
-
         shapeSize.setText("12");
+
     }
+
+    public void choiceBoxClicked(MouseEvent mouseEvent) {
+        if (choiceBox.getValue() == ShapeType.LINE) {
+            double size = Double.parseDouble(shapeSize.getText());
+            canvas.setOnMousePressed(e -> {
+                if (!changeShape.isSelected()) {
+                    Line line = (Line) Shape.createShapes(ShapeType.LINE, 0, 0, size, colorPicker.getValue());
+                    //model.getShapeList().add(line);
+                    context.setStroke(colorPicker.getValue());
+                    context.setLineWidth(size);
+                    line.setStartX(e.getX());
+                    line.setStartY(e.getY());
+                    undoShapeStack.push(line);
+                }
+            });
+            canvas.setOnMouseReleased(e -> {
+                if (!changeShape.isSelected()) {
+                    Line line = (Line) undoShapeStack.peek();
+                    line.setEndX(e.getX());
+                    line.setEndY(e.getY());
+                    context.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+                }
+            });
+
+        } else if (choiceBox.getValue() == ShapeType.RECTANGLE) {
+            double size = Double.parseDouble(shapeSize.getText());
+            canvas.setOnMousePressed(e -> {
+                if (!changeShape.isSelected()) {
+                    Rectangle rectangle = (Rectangle) Shape.createShapes(ShapeType.RECTANGLE, 0, 0, size, colorPicker.getValue());
+                    context.setFill(colorPicker.getValue());
+                    rectangle.setStartX(e.getX());
+                    rectangle.setStartY(e.getY());
+                    undoShapeStack.push(rectangle);
+                }
+            });
+            canvas.setOnMouseReleased(e -> {
+                if (!changeShape.isSelected()) {
+                    Rectangle rect = (Rectangle) undoShapeStack.peek();
+                    setWidth(e.getX(), rect);
+                    setHeight(e.getY(), rect);
+                    context.fillRect(rect.getStartX(), rect.getStartY(), rect.getWidth(), rect.getHeight());
+                    context.strokeRect(rect.getStartX(), rect.getStartY(), rect.getWidth(), rect.getHeight());
+                }
+            });
+        }
+
+
+    }
+
+
+
+    public void saveClick(MouseEvent mouseEvent) {
+        FileWriter.svgWriter(undoShapeStack);
+    }
+
+
 
 
     public void deleteAll(ActionEvent actionEvent) {
-        if (checkBox.isSelected()) {
+        if (deleteBox.isSelected()) {
             context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         }
     }
 
-    public void lineAction(ActionEvent actionEvent) {
-        if (isLineClicked) {
-            double size = Double.parseDouble(shapeSize.getText());
-            canvas.setOnMousePressed(e -> {
-                Line line = new Line(0, 0, 0, 0, size, colorPicker.getValue());
-
-                System.out.println("canvas is pressed for Line");
-                context.setStroke(colorPicker.getValue());
-                context.setLineWidth(size);
-                line.setStartX(e.getX());
-                line.setStartY(e.getY());
-                shapeStack.push(line);
-            });
-            canvas.setOnMouseDragged(e -> {
-
-                System.out.println("Line is dragged");
-            });
-            canvas.setOnMouseReleased(e -> {
-                Line line = (Line) shapeStack.peek();
-                System.out.println("Line is release");
-                line.setEndX(e.getX());
-                line.setEndY(e.getY());
-                context.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
-            });
-
-        }
-    }
-
-    public void rectangleAction(ActionEvent actionEvent) {
-        double size = Double.parseDouble(shapeSize.getText());
-
-        if (isRectClicked) {
-            canvas.setOnMousePressed(e -> {
-                Rectangle rectangle = new Rectangle(0,0,0,0,size, colorPicker.getValue(),0,0,secondColorPicker.getValue());
-
-                context.setStroke(colorPicker.getValue());
-                    context.setFill(secondColorPicker.getValue());
-                    context.setLineWidth(size);
-                    rectangle.setStartX(e.getX());
-                    rectangle.setStartY(e.getY());
-                shapeStack.push(rectangle);
-
-            });
-                canvas.setOnMouseDragged(e -> {
-                });
-                canvas.setOnMouseReleased(e -> {
-                    Rectangle rectangle = (Rectangle) shapeStack.peek();
-
-                    setX(e.getX(), rectangle);
-                    setY(e.getY(), rectangle);
-                    rectangle.setWidth(Math.abs(rectangle.getEndX() - rectangle.getStartX()));
-                    rectangle.setHeight(Math.abs(rectangle.getEndY() - rectangle.getStartY()));
-                    context.fillRect(rectangle.getStartX(), rectangle.getStartY(), rectangle.getWidth(), rectangle.getHeight());
-                    context.strokeRect(rectangle.getStartX(), rectangle.getStartY(),rectangle.getWidth(), rectangle.getHeight());
-                });
-        }
-
-
-
-    }
-
-    public void setY(double eventY, Rectangle rectangle) {
-        if(rectangle.getStartY() > eventY) {
-            rectangle.setEndY(rectangle.getStartY());
+    public void setHeight(double eventY, Rectangle rectangle) {
+        if (rectangle.getStartY() > eventY) {
+            double startY = rectangle.getStartY();
             rectangle.setStartY(eventY);
         } else {
             rectangle.setEndY(eventY);
         }
     }
 
-    public void setX(double eventX, Rectangle rectangle) {
-        if(rectangle.getStartX() > eventX) {
-            rectangle.setEndX(rectangle.getStartX());
+    public void setWidth(double eventX, Rectangle rectangle) {
+        if (rectangle.getStartX() > eventX) {
+            double startX = rectangle.getStartX();
             rectangle.setStartX(eventX);
+            rectangle.setWidth(startX - eventX);
         } else {
-            rectangle.setEndX(eventX);
+            rectangle.setWidth(eventX - rectangle.getStartX());
         }
     }
 
-    public void saveAction(ActionEvent actionEvent) {
+    public void changeShapeAction(ActionEvent actionEvent) {
+        canvas.setOnMousePressed(e -> {
+            if (changeShape.isSelected()) {
 
-    }
 
+                Optional<Shape> selectedShape = undoShapeStack.stream().filter(shape -> shape.checkInsideTheShape(e.getX(), e.getY())).findFirst();
+                if (selectedShape.isPresent()) {
+                    selectedShape.get().setColor(colorPicker.getValue());
 
-    public void lineClicked(MouseEvent mouseEvent) {
-        isLineClicked = true;
-        isRectClicked = false;
-        isSelectClicked = false;
-
-    }
-
-    public void rectClicked(MouseEvent mouseEvent) {
-        isLineClicked = false;
-        isRectClicked = true;
-        isSelectClicked = false;
-
-    }
-
-    public void saveClick(MouseEvent mouseEvent) {
-    }
-
-    public void selectOnAction(ActionEvent actionEvent) {
-       /* AtomicReference<Shape> chosenShape = null;
-        canvas.setOnMousePressed(e->{
-           List <Shape> list = shapeStack.stream().filter(i-> i instanceof Line).filter(l -> ((Line) l).getShapeCordinateX().contains(e.getX())&& ((Line) l).getShapeCordinateY().contains(e.getY())).toList();
-            if (list.size() == 1){
-               chosenShape.set(list.get(0));
-
+                    selectedShape.get().draw(canvas);
+                }
             }
-        });*/
-    }
-
-    public void selectShapeOnAction(ActionEvent actionEvent) {
-
-        if ( isSelectClicked){
-
-            Shape lastUndo = shapeStack.lastElement();
-            lastUndo.setStrokeColor(colorPicker.getValue());
-            lastUndo.setStrokeColor(colorPicker.getValue());
-        }
+        });
 
     }
-
-    public void selectShapeClicked(MouseEvent mouseEvent) {
-        isSelectClicked = true;
-        isLineClicked = false;
-        isRectClicked = false;
-
-    }
-
-    public void choiceBoxClicked(MouseEvent mouseEvent) {
-        if(choiceBox.getValue() == ShapeType.LINE){
-            System.out.println("line is clicked");
-
-
-
-        } else if (choiceBox.getValue() == ShapeType.RECTANGLE){
-            System.out.println("RECT is clicked");
-
-        }
-
-    }
-
-
-    //Variabel med current shapetype typ. if sats.., tex enum. för att sen köra onAction på knappen.
 }
+
 
 
 

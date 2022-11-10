@@ -9,11 +9,11 @@ class DrawingControllerTest {
     DrawingController drawingController = new DrawingController();
 
     @Test
-    void shouldSetEndXOnRectangle(){
-        Rectangle rect = new Rectangle(234,234,0,0,123, Color.ANTIQUEWHITE,0,0,Color.AQUA);
-        Assertions.assertEquals(rect.getEndX(),0);
-        drawingController.setX(245,rect);
-        Assertions.assertEquals(rect.getEndX(),245);
+    void shouldSetWidthOnRectangle(){
+        Rectangle rect = new Rectangle(234,234,0, Color.ANTIQUEWHITE, 0, 0);
+        Assertions.assertEquals(rect.getWidth() ,0);
+        drawingController.setWidth(245,rect);
+        Assertions.assertEquals(rect.getWidth(),245-234);
     }
     @Test
     void shouldSetEndYOnRectangle(){

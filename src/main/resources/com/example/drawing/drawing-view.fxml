@@ -9,7 +9,16 @@
    <top>
       <HBox prefHeight="51.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <ChoiceBox fx:id="choiceBox" onMouseClicked="#choiceBoxClicked" prefWidth="150.0" />
+            <ChoiceBox fx:id="choiceBox" onMouseClicked="#choiceBoxClicked" prefWidth="150.0">
+               <opaqueInsets>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </opaqueInsets>
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding></ChoiceBox>
             <TextField fx:id="shapeSize">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -25,23 +34,12 @@
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding></ColorPicker>
-            <ColorPicker fx:id="secondColorPicker">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </HBox.margin>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </ColorPicker>
             <HBox prefHeight="100.0" prefWidth="200.0" />
          </children>
       </HBox>
    </top>
    <center>
-      <Canvas fx:id="canvas" height="358.0" width="485.0" BorderPane.alignment="CENTER" />
+      <Canvas fx:id="canvas" height="341.0" width="446.0" BorderPane.alignment="CENTER" />
    </center>
    <right>
       <VBox prefHeight="325.0" prefWidth="134.0" BorderPane.alignment="CENTER">
@@ -54,14 +52,14 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </Button>
-            <Button fx:id="save" mnemonicParsing="false" onAction="#saveAction" onMouseClicked="#saveClick" text="Save">
+            <Button fx:id="save" mnemonicParsing="false" onMouseClicked="#saveClick" text="Save">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin></Button>
-            <CheckBox fx:id="checkBox" mnemonicParsing="false" onAction="#deleteAll" prefHeight="27.0" prefWidth="123.0" text="Delete all">
+            <CheckBox fx:id="deleteBox" mnemonicParsing="false" onAction="#deleteAll" prefHeight="27.0" prefWidth="123.0" text="Delete all">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
@@ -71,14 +69,14 @@
             </CheckBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Button fx:id="selectShapeBtn" mnemonicParsing="false" onAction="#selectShapeOnAction" onMouseClicked="#selectShapeClicked" text=" Select Shape">
+                  <CheckBox fx:id="changeShape" mnemonicParsing="false" onAction="#changeShapeAction" text="CheckBox">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </VBox.margin>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
-                  </Button>
+                  </CheckBox>
                </children>
             </VBox>
          </children>
