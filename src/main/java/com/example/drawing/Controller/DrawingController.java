@@ -1,6 +1,6 @@
 package com.example.drawing.Controller;
 
-import com.example.drawing.Model.*;
+import com.example.drawing.Models.*;
 import com.example.drawing.SVG.FileWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -26,23 +25,10 @@ public class DrawingController {
     public ChoiceBox<ShapeType> choiceBox;
     public CheckBox changeShape;
 
-
     Model model = new Model();
-
     Stack<Shape> undoShapeStack = new Stack<>();
     ObservableList<ShapeType> shapeTypesList = FXCollections.observableArrayList(ShapeType.values());
     GraphicsContext context;
-
-    public void undoBtn(MouseEvent mouseEvent) {
-
-        if (!undoShapeStack.isEmpty()) {
-            undoShapeStack.pop();
-            context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            for (Shape shape : undoShapeStack) {
-                shape.draw(canvas);
-            }
-        }
-    }
 
     public void initialize() {
         colorPicker.valueProperty().bindBidirectional(model.colorProperty());
@@ -53,7 +39,6 @@ public class DrawingController {
         context = canvas.getGraphicsContext2D();
         colorPicker.setValue(Color.BLACK);
         shapeSize.setText("12");
-
     }
 
     public void choiceBoxClicked(MouseEvent mouseEvent) {
@@ -62,7 +47,6 @@ public class DrawingController {
             canvas.setOnMousePressed(e -> {
                 if (!changeShape.isSelected()) {
                     Line line = (Line) Shape.createShapes(ShapeType.LINE, 0, 0, size, colorPicker.getValue());
-                    //model.getShapeList().add(line);
                     context.setStroke(colorPicker.getValue());
                     context.setLineWidth(size);
                     line.setStartX(e.getX());
@@ -70,6 +54,7 @@ public class DrawingController {
                     undoShapeStack.push(line);
                 }
             });
+
             canvas.setOnMouseReleased(e -> {
                 if (!changeShape.isSelected()) {
                     Line line = (Line) undoShapeStack.peek();
@@ -90,6 +75,7 @@ public class DrawingController {
                     undoShapeStack.push(rectangle);
                 }
             });
+
             canvas.setOnMouseReleased(e -> {
                 if (!changeShape.isSelected()) {
                     Rectangle rect = (Rectangle) undoShapeStack.peek();
@@ -100,17 +86,22 @@ public class DrawingController {
                 }
             });
         }
-
-
     }
 
+    public void undoBtn(MouseEvent mouseEvent) {
 
+        if (!undoShapeStack.isEmpty()) {
+            undoShapeStack.pop();
+            context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            for (Shape shape : undoShapeStack) {
+                shape.draw(canvas);
+            }
+        }
+    }
 
     public void saveClick(MouseEvent mouseEvent) {
         FileWriter.svgWriter(undoShapeStack);
     }
-
-
 
 
     public void deleteAll(ActionEvent actionEvent) {
@@ -141,9 +132,8 @@ public class DrawingController {
     public void changeShapeAction(ActionEvent actionEvent) {
         canvas.setOnMousePressed(e -> {
             if (changeShape.isSelected()) {
-
-
                 Optional<Shape> selectedShape = undoShapeStack.stream().filter(shape -> shape.checkInsideTheShape(e.getX(), e.getY())).findFirst();
+
                 if (selectedShape.isPresent()) {
                     selectedShape.get().setColor(colorPicker.getValue());
 

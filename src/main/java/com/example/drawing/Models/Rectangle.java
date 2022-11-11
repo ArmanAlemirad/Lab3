@@ -1,10 +1,10 @@
-package com.example.drawing.Model;
+package com.example.drawing.Models;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class Rectangle extends Shape{
+public class Rectangle extends Shape {
 
 
     private double width;
@@ -52,6 +52,6 @@ public class Rectangle extends Shape{
 
     @Override
     public String toSvg() {
-        return "<rect x=\"" + getStartX() + "\" y=\"" + getStartY() + "\" width=\"" + getWidth() + "\" height=\"" + getHeight() + "\" fill=\"" + getColor()+ "\"/>";
+        return "<rect x=\"" + getStartX() + "\" y=\"" + getStartY() + "\" width=\"" + getWidth() + "\" height=\"" + getHeight() + "\" fill=\"" + getColor() + "\"/>";
     }
 }

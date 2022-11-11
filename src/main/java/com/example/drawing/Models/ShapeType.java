@@ -1,4 +1,4 @@
-package com.example.drawing.Model;
+package com.example.drawing.Models;
 
 public enum ShapeType {
     LINE,

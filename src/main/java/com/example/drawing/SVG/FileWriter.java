@@ -1,7 +1,6 @@
 package com.example.drawing.SVG;
 
-import com.example.drawing.Model.Shape;
-import javafx.scene.shape.SVGPath;
+import com.example.drawing.Models.Shape;
 
 import java.io.IOException;
 import java.nio.file.Files;

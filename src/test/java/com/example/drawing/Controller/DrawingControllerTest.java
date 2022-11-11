@@ -1,5 +1,5 @@
 package com.example.drawing.Controller;
-import com.example.drawing.Model.Rectangle;
+import com.example.drawing.Models.Rectangle;
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
