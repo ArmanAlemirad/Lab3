@@ -47,6 +47,7 @@ public class DrawingController {
             canvas.setOnMousePressed(e -> {
                 if (!changeShape.isSelected()) {
                     Line line = (Line) Shape.createShapes(ShapeType.LINE, 0, 0, size, colorPicker.getValue());
+                    context.save();
                     context.setStroke(colorPicker.getValue());
                     context.setLineWidth(size);
                     line.setStartX(e.getX());
@@ -54,13 +55,13 @@ public class DrawingController {
                     undoShapeStack.push(line);
                 }
             });
-
             canvas.setOnMouseReleased(e -> {
                 if (!changeShape.isSelected()) {
                     Line line = (Line) undoShapeStack.peek();
                     line.setEndX(e.getX());
                     line.setEndY(e.getY());
                     context.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+                    context.restore();
                 }
             });
 
@@ -69,6 +70,7 @@ public class DrawingController {
             canvas.setOnMousePressed(e -> {
                 if (!changeShape.isSelected()) {
                     Rectangle rectangle = (Rectangle) Shape.createShapes(ShapeType.RECTANGLE, 0, 0, size, colorPicker.getValue());
+                    context.save();
                     context.setFill(colorPicker.getValue());
                     rectangle.setStartX(e.getX());
                     rectangle.setStartY(e.getY());
@@ -79,10 +81,12 @@ public class DrawingController {
             canvas.setOnMouseReleased(e -> {
                 if (!changeShape.isSelected()) {
                     Rectangle rect = (Rectangle) undoShapeStack.peek();
-                    setWidth(e.getX(), rect);
-                    setHeight(e.getY(), rect);
+                    calculateWidth(e.getX(), rect);
+                    calculateHeight(e.getY(), rect);
                     context.fillRect(rect.getStartX(), rect.getStartY(), rect.getWidth(), rect.getHeight());
                     context.strokeRect(rect.getStartX(), rect.getStartY(), rect.getWidth(), rect.getHeight());
+                    context.restore();
+
                 }
             });
         }
@@ -110,16 +114,19 @@ public class DrawingController {
         }
     }
 
-    public void setHeight(double eventY, Rectangle rectangle) {
+
+    public void calculateHeight(double eventY, Rectangle rectangle) {
         if (rectangle.getStartY() > eventY) {
             double startY = rectangle.getStartY();
             rectangle.setStartY(eventY);
+            rectangle.setHeight(startY - eventY);
         } else {
-            rectangle.setEndY(eventY);
+            rectangle.setHeight(eventY - rectangle.getStartY());
         }
     }
 
-    public void setWidth(double eventX, Rectangle rectangle) {
+
+    public void calculateWidth(double eventX, Rectangle rectangle) {
         if (rectangle.getStartX() > eventX) {
             double startX = rectangle.getStartX();
             rectangle.setStartX(eventX);

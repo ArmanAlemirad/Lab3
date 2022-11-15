@@ -27,9 +27,11 @@ public class Line extends Shape {
     }
     public void draw(Canvas canvas) {
             GraphicsContext context = canvas.getGraphicsContext2D();
+            context.save();
             context.setLineWidth(getSize());
             context.setStroke(getColor());
             context.strokeLine(getStartX(),getStartY(),getEndX(), getEndY());
+            context.restore();
     }
 
     @Override
@@ -39,6 +41,6 @@ public class Line extends Shape {
 
 @Override
     public String toSvg() {
-        return "<line x1=\"" + getStartX() + "\" x2=\""+getEndX() + "\" y1=\"" + getStartY() + "\" y2=\""+getEndY() + "\" stroke-width=\"" + getSize() + "\" stroke=\"" + getColor() + "\"/>";
+        return "<line x1=\"" + getStartX() + "\" x2=\""+ getEndX() + "\" y1=\"" + getStartY() + "\" y2=\""+getEndY() + "\" stroke-width=\"" + getSize() + "\" stroke=\"#" + getColor().toString().substring(4) + "\"/>";
     }
 }

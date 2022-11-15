@@ -11,16 +11,18 @@ class DrawingControllerTest {
     @Test
     void shouldSetWidthOnRectangle(){
         Rectangle rect = new Rectangle(234,234,0, Color.ANTIQUEWHITE, 0, 0);
-        Assertions.assertEquals(rect.getWidth() ,0);
-        drawingController.setWidth(245,rect);
-        Assertions.assertEquals(rect.getWidth(),245-234);
+        Assertions.assertEquals(0, rect.getWidth());
+        drawingController.calculateWidth(245,rect);
+        Assertions.assertEquals(245-234, rect.getWidth());
     }
+
+
     @Test
-    void shouldSetEndYOnRectangle(){
-        Rectangle rect = new Rectangle(234,234,0,0,123, Color.BLACK,0,0,Color.SALMON);
-        Assertions.assertEquals(rect.getEndY(),0);
-        drawingController.setY(315,rect);
-        Assertions.assertEquals(rect.getEndY(),315);
+   void shouldSetEndYOnRectangle(){
+        Rectangle rect = new Rectangle(234,234,0, Color.BLACK,0,0);
+        Assertions.assertEquals(0, rect.getHeight());
+        drawingController.calculateHeight(315,rect);
+        Assertions.assertEquals(315-234, rect.getHeight());
     }
 
 }

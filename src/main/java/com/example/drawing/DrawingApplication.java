@@ -12,7 +12,7 @@ public class DrawingApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(DrawingApplication.class.getResource("drawing-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load(), 750, 750);
         stage.setTitle("Drawing!");
         stage.setScene(scene);
         stage.show();

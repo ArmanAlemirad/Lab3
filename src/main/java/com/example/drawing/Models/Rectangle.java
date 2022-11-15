@@ -52,6 +52,6 @@ public class Rectangle extends Shape {
 
     @Override
     public String toSvg() {
-        return "<rect x=\"" + getStartX() + "\" y=\"" + getStartY() + "\" width=\"" + getWidth() + "\" height=\"" + getHeight() + "\" fill=\"" + getColor() + "\"/>";
+        return "<rect x=\"" + getStartX() + "\" y=\"" + getStartY() + "\" width=\"" + getWidth() + "\" height=\"" + getHeight() + "\" fill=\"#" + getColor().toString().substring(4) + "\"/>";
     }
 }
