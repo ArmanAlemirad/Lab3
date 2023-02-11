@@ -18,6 +18,8 @@
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.organization>armanalemirad</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.login>9ee96b3f976fea5216ba06dc741b67d71a10d663</sonar.login>
+
     </properties>
     <dependencies>
         <dependency>
@@ -90,6 +92,15 @@
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.9.1.2184</version>
+                <executions>
+                    <execution>
+                        <id>sonar</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sonar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
